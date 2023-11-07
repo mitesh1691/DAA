@@ -1,0 +1,113 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class ZeroOneKnapsack {
+    public int knapSack(int[] profits, int[] weights, int capacity) {
+        int n = profits.length;
+        int[][] dp = new int[n + 1][capacity + 1];
+        boolean[][] selected = new boolean[n + 1][capacity + 1]; // To keep track of selected items
+
+        for (int i = 1; i <= n; i++) {
+            for (int w = 1; w <= capacity; w++) {
+                if (weights[i - 1] <= w) {
+                    int includeProfit = profits[i - 1] + dp[i - 1][w - weights[i - 1]];
+                    int excludeProfit = dp[i - 1][w];
+
+                    if (includeProfit > excludeProfit) {
+                        dp[i][w] = includeProfit;
+                        selected[i][w] = true; // Mark the item as selected
+                    } else {
+                        dp[i][w] = excludeProfit;
+                    }
+                } else {
+                    dp[i][w] = dp[i - 1][w];
+                }
+            }
+        }
+
+        // Print the dynamic programming matrix
+        System.out.println("Knapsack Matrix:");
+        for (int i = 0; i <= n; i++) {
+            for (int w = 0; w <= capacity; w++) {
+                System.out.print(dp[i][w] + " ");
+            }
+            System.out.println();
+        }
+
+        // Find the selected items and their values
+        int remainingCapacity = capacity;
+        List<Integer> selectedItems = new ArrayList<>();
+        for (int i = n; i > 0; i--) {
+            if (selected[i][remainingCapacity]) {
+                selectedItems.add(i - 1); // Adjust for 0-based indexing
+                remainingCapacity -= weights[i - 1];
+            }
+        }
+
+        // Print the selected items and their values
+        System.out.println("Selected items:");
+        for (int itemIdx : selectedItems) {
+            System.out.println("Item " + itemIdx + ", Value: " + profits[itemIdx]);
+        }
+
+        return dp[n][capacity];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of items: ");
+        int n = scanner.nextInt();
+
+        int[] profits = new int[n];
+        int[] weights = new int[n];
+
+        System.out.println("Enter the profits of the items:");
+        for (int i = 0; i < n; i++) {
+            profits[i] = scanner.nextInt();
+        }
+
+        System.out.println("Enter the weights of the items:");
+        for (int i = 0; i < n; i++) {
+            weights[i] = scanner.nextInt();
+        }
+
+        System.out.print("Enter the capacity of the knapsack: ");
+        int capacity = scanner.nextInt();
+
+        ZeroOneKnapsack knapsackSolver = new ZeroOneKnapsack();
+        int maxProfit = knapsackSolver.knapSack(profits, weights, capacity);
+
+        System.out.println("Maximum Profit: " + maxProfit);
+
+        scanner.close();
+    }
+}
+
+//3
+//124
+//233
+//6
+
+//    Enter the number of items: 3
+//        Enter the profits of the items:
+//        1
+//        2
+//        3
+//        Enter the weights of the items:
+//        2
+//        3
+//        3
+//        Enter the capacity of the knapsack: 6
+//        Knapsack Matrix:
+//        0 0 0 0 0 0 0
+//        0 0 1 1 1 1 1
+//        0 0 1 2 2 3 3
+//        0 0 1 3 3 4 5
+//        Selected items:
+//        Item 2, Value: 3
+//        Item 1, Value: 2
+//        Maximum Profit: 5
+//
+//        Process finished with exit code 0
