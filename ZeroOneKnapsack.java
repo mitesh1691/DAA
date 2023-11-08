@@ -111,3 +111,5 @@ public class ZeroOneKnapsack {
 //        Maximum Profit: 5
 //
 //        Process finished with exit code 0
+
+// formula : V[i, w] = max{ v[i-1, w], v[i-1, w - w[i]] + p[i]}
