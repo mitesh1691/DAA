@@ -48,7 +48,7 @@ public class ZeroOneKnapsack {
         // Print the selected items and their values
         System.out.println("Selected items:");
         for (int itemIdx : selectedItems) {
-            System.out.println("Item " + itemIdx + ", Value: " + profits[itemIdx]);
+            System.out.println("Item " + (itemIdx + 1) + ", Value: " + profits[itemIdx]);
         }
 
         return dp[n][capacity];
